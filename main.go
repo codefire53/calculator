@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"math"
 )
 func add(num_a, num_b int) (output int) {
 	output = num_a + num_b
@@ -25,14 +27,15 @@ func div(num_a, num_b int) (output int) {
 } 
 
 func pow(base, exp int) (output int) {
-	output = base ** exp
+	output = int(math.Pow(float64(base),float64(exp)))
 	return 
 } 
 
 func calculatorHandler(w http.ResponseWriter, req *http.Request) {
 
-	numA := req.URL.Query().Get("num_a")
-	numB := req.URL.Query().Get("num_b")
+	numA, _ := strconv.Atoi(req.URL.Query().Get("num_a"))
+	numB, _ := strconv.Atoi(req.URL.Query().Get("num_b"))
+
 	operator := req.URL.Query().Get("operator")
 	res := 0
 	switch operator {
@@ -54,6 +57,7 @@ func calculatorHandler(w http.ResponseWriter, req *http.Request) {
 		case "**":
 			res = pow(numA, numB)
 			break
+		
 		
 	}
 	fmt.Fprintf(w, fmt.Sprint(res))
